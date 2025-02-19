@@ -1,0 +1,8 @@
+{
+    "url_api": "http://192.168.1.30:1010/api/",
+    "url_data": "http://192.168.1.30:1010/public/Aqua/",
+    "isProducao": false,
+    "versao": "1.0.0",
+    "datarelease": "2025-01-01T00:00:00Z"
+}
+  

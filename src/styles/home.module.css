@@ -1,0 +1,39 @@
+.container {
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+  
+  /* Ajustando responsividade usando classes do Bootstrap */
+  .row > div {
+    padding: 8px;
+  }
+  
+  /* Adicionando um espaçamento uniforme entre os cards */
+  .card {
+    padding: 16px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Responsividade para garantir que 6 colunas no desktop, 3 no tablet e 2 no mobile */
+  @media (max-width: 767px) {
+    .col-custom {
+      flex: 0 0 50%;
+      max-width: 50%;
+    }
+  }
+  
+  @media (min-width: 768px) and (max-width: 1199px) {
+    .col-custom {
+      flex: 0 0 33.3333%;
+      max-width: 33.3333%;
+    }
+  }
+  
+  @media (min-width: 1200px) {
+    .col-custom {
+      flex: 0 0 16.6667%;
+      max-width: 16.6667%;
+    }
+  }  
