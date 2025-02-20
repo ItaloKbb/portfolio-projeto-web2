@@ -1,7 +1,4 @@
-interface Conhecimento {
-    titulo: string;
-    nivel: number;
-}
+import { Conhecimentos } from "./Conhecimentos";
 
 interface Projetos {
     id: number;
@@ -18,6 +15,6 @@ export interface User {
     emprego: string;
     area: string;
     nacionalidade: string;
-    conhecimentos: Conhecimento[];
+    conhecimentos: Conhecimentos[];
     projetos: Projetos[];
 }

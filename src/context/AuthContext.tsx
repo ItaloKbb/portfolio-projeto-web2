@@ -1,8 +1,14 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
-import { useRouter } from 'next/navigation';
-import { getToken, removeToken, setToken, setIdUser } from '@/lib/auth';
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  ReactNode,
+} from "react";
+import { useNavigate } from "react-router-dom";
+import { getToken, removeToken, setToken, setIdUser } from "../lib/auth";
 
 // Definindo tipos
 type User = {
@@ -24,7 +30,7 @@ const AuthContext = createContext<AuthContextType | null>(null);
 
 export function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<User>(null);
-  const router = useRouter();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const token = getToken();
@@ -36,31 +42,34 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const login = async (email: string, senha: string) => {
     const token = getToken();
 
-    const response = await fetch('http://localhost:1010/api/users/login/', {
-      method: 'POST',
+    const response = await fetch("http://localhost:1010/api/users/login/", {
+      method: "POST",
       headers: {
-        'Authorization': `Bearer ${token}`, // Adicione o token de autenticação
-        'Content-Type': 'application/json'
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({ email, senha }),
     });
 
     const data = await response.json();
     if (response.ok) {
-      removeToken(); // Remove o token anterior, se houver
-      setToken(data.token); // Armazena o novo token nos cookies
+      removeToken();
+      setToken(data.token);
       setIdUser(data.userId);
-      setUser({ token: data.token }); // Atualiza o estado do usuário
-      router.push('/menu'); // Redireciona para a página de upload
+      setUser({ token: data.token });
+      navigate("/menu");
     } else {
-      throw new Error(data.error || 'Erro ao fazer login');
+      console.log("Falha ao realizar login: " + data.error.status)
+      console.log(data); // Debug: verifique o que a API realmente retorna
+      console.log(data.error.message);
+      throw new Error(data.error.message || "Erro ao fazer login");
     }
   };
 
   const logout = () => {
     removeToken();
     setUser(null);
-    router.push('/login');
+    navigate("/login");
   };
 
   return (
@@ -73,7 +82,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {
-    throw new Error('useAuth deve ser usado dentro de um AuthProvider');
+    throw new Error("useAuth deve ser usado dentro de um AuthProvider");
   }
   return context;
 };

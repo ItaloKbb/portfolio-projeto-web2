@@ -11,8 +11,11 @@ import Navbar from './components/organisms/Navbar';
 
 import Home from "./pages/Home";
 import About from "./pages/About";
-import NotFound from './pages/NotFound';
 import LayoutLandingPage from './pages/LandingPage';
+import Projeto from "./pages/Projects";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import NotFound from './pages/NotFound';
 
 import Footer from './components/organisms/Footer';
 
@@ -25,6 +28,10 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
         <Route path="/layout" element={<LayoutLandingPage />} />
+        <Route path="/projetos" element={<Projeto/>} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/registro" element={<Register />} />
+
         <Route path="*" element={<NotFound />} /> {/* Rota para páginas não encontradas */}
       </Routes>
       <Footer />

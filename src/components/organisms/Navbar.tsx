@@ -64,7 +64,7 @@ const Navbar: React.FC = () => {
     <nav className="navbar navbar-expand-lg navbar-light bg-light">
       <div className="container-fluid">
         <Link className="navbar-brand" to="/">
-          Navbar
+          "Web 2"
         </Link>
 
         <button
@@ -88,7 +88,12 @@ const Navbar: React.FC = () => {
             </li>
             <li className="nav-item">
               <Link className="nav-link" to="/about">
-                About
+                Sobre
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link className="nav-link" to="/projetos">
+                Projetos
               </Link>
             </li>
             <li className="nav-item dropdown">
@@ -100,17 +105,17 @@ const Navbar: React.FC = () => {
                 data-bs-toggle="dropdown"
                 aria-expanded="false"
               >
-                Dropdown
+                Edição
               </a>
               <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
                 <li>
                   <a className="dropdown-item" href="#">
-                    Action
+                    Cadastro projeto
                   </a>
                 </li>
                 <li>
                   <a className="dropdown-item" href="#">
-                    Another action
+                    Cadastro competencia
                   </a>
                 </li>
                 <li>
@@ -122,11 +127,6 @@ const Navbar: React.FC = () => {
                   </a>
                 </li>
               </ul>
-            </li>
-            <li className="nav-item">
-              <a className="nav-link disabled" href="#" tabIndex={-1} aria-disabled="true">
-                Disabled
-              </a>
             </li>
           </ul>
 
