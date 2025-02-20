@@ -13,6 +13,8 @@ import Home from "./pages/Home";
 import About from "./pages/About";
 import LayoutLandingPage from './pages/LandingPage';
 import Projeto from "./pages/Projects";
+import ConhecimentosCadastro from "./pages/cadastros/conhecimentos";
+import ProjetosCadastro from "./pages/cadastros/Projetos";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import NotFound from './pages/NotFound';
@@ -29,6 +31,8 @@ function App() {
         <Route path="/about" element={<About />} />
         <Route path="/layout" element={<LayoutLandingPage />} />
         <Route path="/projetos" element={<Projeto/>} />
+        <Route path="/cadastro/conhecimentos" element={<ConhecimentosCadastro/>} />
+        <Route path="/cadastro/projetos" element={<ProjetosCadastro/>} />
         <Route path="/login" element={<Login />} />
         <Route path="/registro" element={<Register />} />
 

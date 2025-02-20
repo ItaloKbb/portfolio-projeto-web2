@@ -1,7 +1,8 @@
-import { Conhecimentos } from "./Conhecimentos";
+import { Conhecimento } from "./Conhecimento";
 
 export interface UserConhecimentos {
     id: number;
     nivel: number;
-    conhecimentos: Conhecimentos[];
+    conhecimentoId: number;
+    conhecimento: Conhecimento;
 }

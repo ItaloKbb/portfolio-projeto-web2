@@ -1,32 +1,42 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import { getIdUser } from "../../lib/auth";
+
 import "bootstrap/dist/css/bootstrap.min.css";
 import { UserConhecimentos } from "../../types/UserConhecimentos";
-import { Conhecimentos } from "../../types/Conhecimentos";
-import { getDataApi } from "../../lib/apiUtils";
+import { Conhecimento } from "../../types/Conhecimento";
+import { getDataApi, postDataApi, deleteDataAPI } from "../../lib/apiUtils";
 
 const Competencias = () => {
   const [competencias, setCompetencias] = useState<UserConhecimentos[]>([]);
-  const [conhecimentos, setConhecimentos] = useState<Conhecimentos[]>([]);
+  const [conhecimentos, setConhecimentos] = useState<Conhecimento[]>([]);
   const [userId, setUserId] = useState(0); // Defina dinamicamente se necessário
   const [conhecimentoId, setConhecimentoId] = useState("");
   const [nivel, setNivel] = useState(1);
   const [loading, setLoading] = useState(false);
 
-  // Carregar as competências já cadastradas
   useEffect(() => {
-    setUserId(1);
+    const id: unknown = getIdUser();
+    const parsedId = Number(id);
+
+    if (!isNaN(parsedId) && parsedId > 0) {
+      setUserId(parsedId);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (userId === 0) return; // Evita chamadas antes do userId ser definido corretamente
 
     const fetchCompetencias = async () => {
       setLoading(true);
       try {
-        const queryParams = new URLSearchParams();
-        console.log("Evento GET API...");
-        const queryParamsObject = Object.fromEntries(queryParams.entries());
-        console.log(queryParamsObject);
+        console.log("Evento GET API... (Competências)");
+        const response = await getDataApi("user-conhecimento", "");
 
-        const response = await getDataApi("conhecimentos", "", queryParamsObject);
-        setCompetencias(response.data);
+        if (Array.isArray(response.data)) {
+          setCompetencias(response.data);
+        } else {
+          console.warn("Formato inesperado em response.data:", response.data);
+        }
       } catch (error) {
         console.error("Erro ao buscar competências:", error);
       } finally {
@@ -36,14 +46,24 @@ const Competencias = () => {
 
     const fetchConhecimentos = async () => {
       try {
+        console.log("Evento GET API... (Conhecimentos)");
         const queryParams = new URLSearchParams();
-        if (userId) queryParams.append("userId", String(userId));
-        console.log("Evento GET API...");
-        const queryParamsObject = Object.fromEntries(queryParams.entries());
-        console.log(queryParamsObject);
+        queryParams.append("userId", String(userId));
 
-        const response = await getDataApi("user-conhecimento", "", queryParamsObject);
-        setConhecimentos(response.data.data);
+        // Converte URLSearchParams para um objeto compatível com QueryParams
+        const queryParamsObject = Object.fromEntries(queryParams.entries());
+
+        const response = await getDataApi(
+          "conhecimentos",
+          "",
+          queryParamsObject
+        );
+
+        if (Array.isArray(response.data)) {
+          setConhecimentos(response.data);
+        } else {
+          console.warn("Formato inesperado em response.data:", response.data);
+        }
       } catch (error) {
         console.error("Erro ao buscar conhecimentos:", error);
       }
@@ -51,23 +71,43 @@ const Competencias = () => {
 
     fetchCompetencias();
     fetchConhecimentos();
-  }, []);
+  }, [userId]); // Só executa quando `userId` for atualizado
+
+  // Log para garantir que `conhecimentos` foi atualizado corretamente
+  useEffect(() => {
+    console.log("Conhecimentos atualizados:", conhecimentos);
+  }, [conhecimentos]);
+
+  // Log para garantir que `Competencias` foi atualizado corretamente
+  useEffect(() => {
+    console.log("Competencias atualizados:", competencias);
+  }, [competencias]);
 
   // Adicionar nova competência
   const handleAddCompetencia = async () => {
+    console.log("ID conhecimento: " + conhecimentoId);
+    console.log("Nivel conhecimento: " + nivel);
     if (!conhecimentoId || nivel < 1 || nivel > 10) {
       alert("Selecione um conhecimento e um nível válido (1 a 10).");
       return;
     }
 
     try {
-      const response = await axios.post(`${API_URL}/user-conhecimento`, {
-        userId,
-        conhecimentoId,
-        nivel,
-      });
+      const novoConhecimento = {
+        userId: Number(userId),
+        conhecimentoId: Number(conhecimentoId),
+        nivel: Number(nivel),
+      };
+      console.log(
+        "Novo conhecimento body:",
+        JSON.stringify(novoConhecimento, null, 2)
+      );
 
-      setCompetencias([...competencias, response.data]); // Atualiza a lista com o novo item
+      const response = await postDataApi(`user-conhecimento`, novoConhecimento);
+
+      console.log("Resultado: " + response);
+
+      setCompetencias([...competencias, response.data as UserConhecimentos]);
       setConhecimentoId("");
       setNivel(1);
     } catch (error) {
@@ -78,7 +118,7 @@ const Competencias = () => {
   // Remover competência
   const handleDeleteCompetencia = async (id: number) => {
     try {
-      await axios.delete(`${API_URL}/user-conhecimento/${id}`);
+      await deleteDataAPI(`user-conhecimento/`, String(id));
       setCompetencias(competencias.filter((item) => item.id !== id));
     } catch (error) {
       console.error("Erro ao excluir competência:", error);
@@ -120,7 +160,10 @@ const Competencias = () => {
             />
           </div>
           <div className="col-md-3 d-flex align-items-end">
-            <button className="btn btn-success w-100" onClick={handleAddCompetencia}>
+            <button
+              className="btn btn-success w-100"
+              onClick={handleAddCompetencia}
+            >
               Adicionar
             </button>
           </div>
@@ -137,11 +180,23 @@ const Competencias = () => {
         ) : (
           <ul className="list-group">
             {competencias.map((item) => (
-              <li key={item.id} className="list-group-item d-flex justify-content-between align-items-center">
+              <li
+                key={item.id}
+                className="list-group-item d-flex justify-content-between align-items-center"
+              >
                 <div>
-                  <strong>{item.conhecimento.titulo}</strong> - Nível {item.nivel}
+                  <strong>
+                    {item.conhecimento
+                      ? item.conhecimento.titulo
+                      : conhecimentos.find((c) => c.id === item.conhecimentoId)
+                          ?.titulo || "Competência não encontrada"}
+                  </strong>{" "}
+                  - Nível {item.nivel}
                 </div>
-                <button className="btn btn-danger btn-sm" onClick={() => handleDeleteCompetencia(item.id)}>
+                <button
+                  className="btn btn-danger btn-sm"
+                  onClick={() => handleDeleteCompetencia(item.id)}
+                >
                   Remover
                 </button>
               </li>

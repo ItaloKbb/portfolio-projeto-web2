@@ -68,7 +68,7 @@ const Login = () => {
           </button>
         </form>
         <div className="mt-3 text-center">
-          <a href="#" className="text-decoration-none">
+          <a href="/registro" className="text-decoration-none">
             Não tem cadastro?
           </a>
         </div>

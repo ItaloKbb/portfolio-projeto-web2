@@ -1,4 +1,4 @@
-export interface Conhecimentos {
+export interface Conhecimento {
     id: number;
     titulo: string;
 }

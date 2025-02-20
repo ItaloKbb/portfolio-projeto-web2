@@ -48,14 +48,10 @@ const Projects: React.FC = () => {
     effectRan.current = true;
   }, [filter]);
 
-  // Função de clique no card do usuário
   const handleProjectClick = (projeto: Projeto) => {
     console.log("Projeto selecionado:", projeto);
-    const filterData: { id?: number; nome?: string; email?: string } = {};
-    filterData.id = projeto.id;
-    filterData.nome = projeto.nome;
-    updateFilter(filterData);
-    navigate(`/editProject?filter=${encodeURIComponent(projeto.id)}`);
+    // Redirecionar para link externo corretamente
+    window.open(projeto.link_externo, "_blank");
   };
 
   return (

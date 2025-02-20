@@ -1,4 +1,4 @@
-import { Conhecimentos } from "./Conhecimentos";
+import { Conhecimento } from "./Conhecimento";
 
 interface Projetos {
     id: number;
@@ -15,6 +15,6 @@ export interface User {
     emprego: string;
     area: string;
     nacionalidade: string;
-    conhecimentos: Conhecimentos[];
+    conhecimento: Conhecimento[];
     projetos: Projetos[];
 }

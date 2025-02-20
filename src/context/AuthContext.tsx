@@ -57,7 +57,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       setToken(data.token);
       setIdUser(data.userId);
       setUser({ token: data.token });
-      navigate("/menu");
+      navigate("/projetos");
     } else {
       console.log("Falha ao realizar login: " + data.error.status)
       console.log(data); // Debug: verifique o que a API realmente retorna
